@@ -1,0 +1,91 @@
+* 助记
+
+- _name_属性
+
+  #+BEGIN_SRC python
+def now():
+    print("<2017-02-25 六>")
+now._name_
+  
+  #+END_SRC
+
+* 函数式编程
+
+** 高阶函数
+
+- map/reduce
+
+- filter
+
+- sorted 排序算法
+
+  - key
+
+    key 指定的函数将作用于每一个元素上，并根据其结果排序，但是排序之后的元素将变成被 key 作用之前的值。
+
+  - reverse = True/False
+
+  #+BEGIN_SRC python
+l = [('Bob', 75), ('Adam', 92), ('Bart', 66), ('Lisa', 88)]
+def func(x):
+return x[0].lower()
+sorted(l, key = func)
+
+  #+END_SRC
+
+** 匿名函数
+
+lambda args...: ...
+
+- 匿名函数只有一个表达式
+- 匿名函数不用写 return
+
+** 装饰器
+
+import functools
+@functools.wraps(func)
+
+#+BEGIN_SRC python
+import functools
+def log(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kw):
+        print('call %s():' % func._name_)
+        return func(*args, **kw)
+    return wrapper
+
+#+END_SRC
+
+#+BEGIN_SRC python
+import functools
+def log(text):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kw):
+            print("%s %s()" & (text, func._name_))
+            return func(*arg, **kw)
+        return wrapper
+    return decorator
+
+#+END_SRC
+
+** 偏函数
+
+functools.partial
+
+#+BEGIN_SRC python
+import functools
+int2 = functools.parial(int, base=2)
+int2('1000')
+int2('1000', base=8)
+
+#+END_SRC
+
+#+BEGIN_SRC python
+max2 = functools.partial(max, 10)
+max2(5, 6, 7)
+#args =(10, 5, 6, 7)
+#max(*args)
+
+#+END_SRC
+
