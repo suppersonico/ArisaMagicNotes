@@ -9,6 +9,11 @@ now._name_
   
   #+END_SRC
 
+- sys 模块
+
+  - argv 命令行参数
+
+
 * 函数式编程
 
 ** 高阶函数
@@ -88,4 +93,124 @@ max2(5, 6, 7)
 #max(*args)
 
 #+END_SRC
+
+
+* 模块
+
+- 模块可以被包组织
+- 包 => 含有 *_init_.py* 文件的目录
+- —_init_.py 本身为一个模块，该模块的名称就是包
+- 可以有多级目录组成多级层次结构的包结构
+
+- _doc_ / 模块注释
+
+  任何模块的第一行字符串都被视为该模块的文档注释，可以通过变量 _doc_ 访问
+
+- _author_变量表示作者
+
+- _name_='_main_'
+
+  当一个模块在命令行运行时，该模块的_name_变量会被置为 '_main_'
+
+- _xxx_ 这种两个下划线的变量为特殊变量，可以直接被引用。自己的变量一般*不要用这种命名*
+
+- _xxx 这种命名的函数/变量是非公开(private)，不应该被直接引用
+
+** 第三方模块
+
+pip install modle_name
+
+
+* 面向对象
+
+#+BEGIN_SRC python
+class Student(obj);
+
+    def _init_(self, name, score):
+        self.name = name
+        self.score = score
+
+    def print_score(self):
+        print('%s: %s' % (self.name, self.socre))
+
+#+END_SRC
+
+- _init_()
+
+- self
+
+  类中定义的函数第一个参数永远是 self
+
+- ———_
+
+  该方法返回长度，调用 len() 函数时传入的对象必须有 __len__ 方法，因为 len() 函数在内部自动调用它
+
+- 类名后紧跟的 *(obj)* 表示该类是从哪个类继承的
+
+** 访问限制
+
+__xxx 如果要让内部属性不被外部访问，可以把属性的名称前加上 *两个下划线__* ，在Python中，实例的变量名如果以__开头，就变成了一个私有变量（private），只有内部可以访问。但是不能使用 *双下划线结尾*
+
+——__xxx___ 滑线开头并且以双下划线结尾的是特殊变量，可以访
+
+** 获取对象信息
+
+- type()
+- types.FunctionType
+
+  函数类型
+
+  #+BEGIN_SRC python
+import types
+def fn():
+    pass
+type(fn)==types.FunctionType
+  
+  #+END_SRC
+
+- GeneratorType
+
+  #+BEGIN_SRC python
+import types
+type((x for x in range(10)))==types.GeneratorType
+  
+  #+END_SRC
+
+- isinstance
+
+- isinstance 判断是否是某些类型中的一种
+
+  #+BEGIN_SRC python
+isinstance([1, 2, 3], (list, tuple))
+isinstance('hello world', (int, str))
+  
+  #+END_SRC
+
+- dir
+
+  返回一个字符串的 list，可以用来获得一个对象的所有属性和方法
+
+  #+BEGIN_SRC python
+dir(int)
+  
+  #+END_SRC
+
+- hasattr | setattr | getattr
+
+  - hasattr(obj, 'x') --------- 有属性 'x' 吗？
+
+  - setattr(obj, 'y', 19) ----- 设置一个属性 'y'
+
+  - getattr(obj, 'y') --------- 获取属性 'y'
+
+  如果试图获取不存在的属性，会抛出 AttributeError 的错误
+
+  可以传入一个 default 参数，如果属性不存在就返回默认值
+
+  #+BEGIN_SRC python
+gettattr(obj, 'z', 404)
+  
+  #+END_SRC
+
+  *也可以用以上三个函数获取对象的方法*
 
