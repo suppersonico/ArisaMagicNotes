@@ -425,9 +425,9 @@ s = Student('Arisa')
 
 - 使用
 
-模块： enum.Enum
+  模块： enum.Enum
 
-#+BEGIN_SRC python
+  #+BEGIN_SRC python
 from enum import Enum
 Month = Enum('Month', ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'))
 for obj in Month:
@@ -439,7 +439,7 @@ Month(1).value
 
 #+END_SRC
 
-value 默认从1开始
+  value 默认从1开始
 
 - 从 Enum 派生
 
