@@ -1,17 +1,51 @@
 * 助记
 
-- _name_属性
+- 特殊变量
 
-  #+BEGIN_SRC python
-def now():
-    print("<2017-02-25 六>")
-now._name_
+  - _name_属性
+
+    #+BEGIN_SRC python
+  def now():
+      print("<2017-02-25 六>")
+  now._name_
   
-  #+END_SRC
+    #+END_SRC
+
+- 特殊方法
+
+  - __next__
+
+  - __init__
+
+  - __str__
+
+  - __iter__
+
+  - __getitem__
 
 - sys 模块
 
   - argv 命令行参数
+
+- 命名规则
+
+  - _xxx_ 这种两个下划线的变量为特殊变量，可以直接被引用。自己的变量一般*不要用这种命名*
+
+  - _xxx 这种命名的函数/变量是非公开(private)，不应该被直接引用
+
+  - __xxx 如果要让内部属性不被外部访问，可以把属性的名称前加上 *两个下划线__* ，在Python中，实例的变量名如果以__开头，就变成了一个私有变量（private），只有内部可以访问。但是不能使用 *双下划线结尾*
+
+  - __XXX__ 双下划线开头并且以双下划线结尾的为特殊变量可以访问。
+
+- MixIn
+
+  - ForkingMixIn
+
+  - ThreadingMixIn
+
+  - TCPServer
+
+  - UDPServer
 
 
 * 函数式编程
@@ -141,7 +175,7 @@ class Student(obj);
 
   类中定义的函数第一个参数永远是 self
 
-- ———_
+- __len__
 
   该方法返回长度，调用 len() 函数时传入的对象必须有 __len__ 方法，因为 len() 函数在内部自动调用它
 
@@ -151,7 +185,9 @@ class Student(obj);
 
 __xxx 如果要让内部属性不被外部访问，可以把属性的名称前加上 *两个下划线__* ，在Python中，实例的变量名如果以__开头，就变成了一个私有变量（private），只有内部可以访问。但是不能使用 *双下划线结尾*
 
-——__xxx___ 滑线开头并且以双下划线结尾的是特殊变量，可以访
+
+__XXX__ 双下划线开头并且以双下划线结尾的为特殊变量可以访问。
+
 
 ** 获取对象信息
 
@@ -214,3 +250,172 @@ gettattr(obj, 'z', 404)
 
   *也可以用以上三个函数获取对象的方法*
 
+
+
+* 面向对象高级
+
+** 给对象绑定方法
+
+  #+BEGIN_SRC python
+def method_name(self, arg):
+    pass
+from types import MethodType
+s.method_name = MethodType(method_name, s)
+  
+  #+END_SRC
+
+  但是给一个实例绑定的方法对另外一个实例是不起作用的，我们可以将方法绑定到 Class
+
+  #+BEGIN_SRC python
+def method_name(self, arg):
+pass
+ClassName.method_name = method_name
+  
+  #+END_SRC
+
+
+** __slots__
+
+  Python允许在定义class的时候，定义一个特殊的__slots__变量，来限制该class实例能添加的属性:
+
+  #+BEGIN_SRC python
+class Student(object):
+    __slots__ = ('name', 'age') # 用tuple定义允许绑定的属性名称
+  
+  #+END_SRC
+
+  *__slots__定义的属性仅对当前类实例起作用，对继承的子类是不起作用的*
+
+
+** @property
+
+  #+BEGIN_SRC python
+class Student(object):
+
+    @property
+    def score(self):
+        return self._score
+
+    @score.setter
+    def score(self, value):
+        if not isinstance(value, int):
+            raise ValueError('score must be an integer!')
+        if value < 0 or value > 100:
+            raise ValueError('score must between 0 ~ 100!')
+        self._score = value
+  
+  #+END_SRC
+
+  @property的实现比较复杂，我们先考察如何使用。把一个getter方法变成属性，只需要加上@property就可以了，此时，@property本身又创建了另一个装饰器@score.setter，负责把一个setter方法变成属性赋值
+
+  如果只定义 getter，就变成了只读属性
+
+
+** 多重继承
+
+- MixIn
+
+  在设计类的继承关系时，通常，主线都是单一继承下来的，例如，Ostrich继承自Bird。但是，如果需要“混入”额外的功能，通过多重继承就可以实现，比如，让Ostrich除了继承自Bird外，再同时继承Runnable。这种设计通常称之为MixIn。
+
+  为了更好地看出继承关系，我们把Runnable和Flyable改为RunnableMixIn和FlyableMixIn。类似的，你还可以定义出肉食动物CarnivorousMixIn和植食动物HerbivoresMixIn，让某个动物同时拥有好几个MixIn：
+
+  #+BEGIN_SRC python
+class Dog(Mammal, RunnableMixIn, CarnivorousMixIn):
+    pass
+
+  #+END_SRC
+
+** 定制类
+
+- __str__ 打印时调用的特殊方法
+
+- __repr__ 直接显示变量时调用的特殊方法
+
+  *可以写成 __repr__ = __str__*
+
+  #+BEGIN_SRC python
+class Student(object):
+    def __init__(self, name_):
+        self.name = name
+    def __str__(self):
+        return 'Student obj (name=%s)' %self.name
+    __repr__ = __str__
+  
+  #+END_SRC
+
+- __iter__ 该函数返回一个迭代对象，用于 for... in 循环（可以返回一个拥有 __next__ 方法，并且能够 raise StopIteration() 的鸭子迭代对象
+
+  #+BEGIN_SRC python
+class Fib(object):
+    def __init__(self):
+        self.a, self.b = 0, 1
+    def __iter__(self):
+        return self
+    def __next__(self):
+        self.a, self.b = self.a + self.b
+        if self.a > 10000:
+            raise StopIteration()
+        return self.a
+  
+  #+END_SRC
+
+  此处返回的 self 就是一个拥有 __next__ 方法并且能够在迭代结束是 raise StopIteration() 的鸭子迭代对象
+
+- __getitem__ 使用下标取出元素时调用的函数
+
+  #+BEGIN_SRC python
+class Fib(object):
+    def __getitem__(self, n):
+        if isinstance(n, int): # n是索引
+            a, b = 1, 1
+            for x in range(n):
+                a, b = b, a + b
+            return a
+        if isinstance(n, slice): # n是切片
+            start = n.start
+            stop = n.stop
+            if start is None:
+                start = 0
+            a, b = 1, 1
+            L = []
+            for x in range(stop):
+                if x >= start:
+                    L.append(a)
+                a, b = b, a + b
+            return L
+
+  #+END_SRC
+
+  *slice*表示切片
+
+  完整的切片还需要处理 step 参数和负数下标
+
+  此外如果该对象被当成一个 dict 那么 __getitem__ 方法的参数就应该是作为 key 的 obj 而不是下标
+
+- __setitem__
+
+- __delitem__
+
+- __getattr__ / 动态调用
+
+  当调用不存在的属性时，比如score，Python解释器会试图调用__getattr__(self, 'score')来尝试获得属性
+  只有在没有找到属性的情况下，才调用__getattr__，已有的属性，比如name，不会在__getattr__中查找。
+  如果在调用 __getattr_ 时传入的是 __getattr__ 没有处理的属性，则返回 None
+  可以在 __getattr__ 末尾不返回 None，而是按照约定抛出 AttributeError 的错误
+  #+BEGIN_SRC python
+class Student(object):
+    def __getattr__(self, attr):
+        if attr == 'age':
+            return lambda: 25
+        raise AttributeError('/'Student/' object has no attribute /'%s/'' % attr)
+  
+  #+END_SRC
+
+- __call__ 实现该函数之后，可以这样在实例本身上调用：
+
+  #+BEGIN_SRC python
+s = Student('Arisa')
+  
+  #+END_SRC
+
+- callable 判断一个对象是否能被调用，如果能返回 True
