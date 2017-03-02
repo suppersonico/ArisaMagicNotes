@@ -31,6 +31,84 @@
 
 * 类型、储存、变量
 
+** 预定义类型
+
+   - object
+   - 简单类型
+     - 非数值类型
+       - bool
+       - char
+     - 数值类型
+       - 整数类型
+	 - 8
+	   - sbyte
+	   - byte
+	 - 16
+	   - short
+	   - ushort
+	 - 32
+	   - int
+	   - uint
+	 - 64
+	   - long
+	   - ulong
+       - 浮点数类型
+	 - decimal
+	 - float
+	 - double
+   - string
+
+
+** 用户定义类型
+
+- class
+- struct
+- array
+- enum
+- delegate
+- interface
+
+
+** 栈&堆
+
+*** 栈
+
+*** 堆
+
+
+** 值类型&引用类型
+
+*** 值类型
+
+数据存放在栈中
+
+
+*** 引用类型
+
+引用存放在栈中，而数据存放在堆中。
+
+但是，一个引用类型的成员也是引用类型，那么该成员的引用会存放在堆中，封装在父类型的数据部分。
+
+对于引用类型的任何对象，它所有的数据成员都存放在堆中，无论他们是值类型还是引用类型。
+
+
+*** 值类型&引用类型 图表
+
+|              | 值类型 |        |         | 引用类型  |
+| 预定义类型   | sbyte  | bytef  | float   | object    |
+|              | short  | ushort | double  | string    |
+|              | int    | uint   | char    |           |
+|              | long   | ulong  | decimal |           |
+|              | bool   |        |         |           |
+|              |        |        |         |           |
+| 用户定义类型 | struct |        |         | class     |
+|              | enum   |        |         | interface |
+|              |        |        |         | delegate  |
+|              |        |        |         | array     |
+
+
+** s
+
 
 
 
@@ -49,3 +127,4 @@
     - 值可以以任何顺序使用
 
     - 如果标记溢出，不会产生编译错误但是会出现运行时异常
+
