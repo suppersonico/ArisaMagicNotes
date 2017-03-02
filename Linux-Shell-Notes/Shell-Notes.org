@@ -1,0 +1,9 @@
+* 常用
+
+- pm-hibernate 休眠
+- pm-powersave 节电
+
+  #+BEGIN_SRC SHELL
+sudo pm-powersave true/false
+  
+  #+END_SRC
