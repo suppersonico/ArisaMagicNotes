@@ -94,7 +94,7 @@
 
 *** 值类型&引用类型 图表
 
-|              | 值类型 |        |         | 引用类型  |
+|              | <-     | 值类型 | ->      | 引用类型  |
 | 预定义类型   | sbyte  | bytef  | float   | object    |
 |              | short  | ushort | double  | string    |
 |              | int    | uint   | char    |           |
